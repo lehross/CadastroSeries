@@ -8,16 +8,37 @@ namespace CadastroDeSeries
 {
     public class SerieRepositorio : IRepositorio<Serie>
     {
-        private List<Serie> listaSerie = new List<Serie>(); //conterá todas as séries
-
-        public void Atualiza(int id, Serie entidade)
+        public void Atualiza(string titulo, Serie entidade)
         {
-            listaSerie[id] = entidade;
+            using (var conn = new MySqlConnection(Connection().ConnectionString))
+            {
+                conn.Open();
+
+                using (var command = conn.CreateCommand())
+                {
+                    command.CommandText = $"UPDATE `series` SET `gender` = {(int) entidade.Genero}, `name` = '{entidade.Titulo}', `total_ep` = {entidade.Total_Ep}, `current_ep` = {entidade.Atual_Ep}, `year` = {entidade.Ano} WHERE (`name` = '{titulo}')";
+
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            Console.WriteLine($"Série {titulo} atualizada!");
         }
 
-        public void Exclui(int id)
+        public void Exclui(string titulo)
         {
-            listaSerie[id].Excluir();
+            using (var conn = new MySqlConnection(Connection().ConnectionString))
+            {
+                conn.Open();
+
+                using (var command = conn.CreateCommand())
+                {
+                    command.CommandText = $"DELETE FROM series WHERE (`name` = '{titulo}')";
+
+                    command.ExecuteNonQuery();
+                    Console.WriteLine("Série excluída!");
+                }
+            }
         }
 
         public void Insere(Serie entidade)
@@ -64,14 +85,30 @@ namespace CadastroDeSeries
             }
         }
 
-        public int ProximoId()
+        public void RetornaPorTitulo(string titulo)
         {
-            return listaSerie.Count;
-        }
+            using (var conn = new MySqlConnection(Connection().ConnectionString))
+            {
+                conn.Open();
 
-        public Serie RetornaPorId(int id)
-        {
-            return listaSerie[id];
+                using (var command = conn.CreateCommand())
+                {
+                    command.CommandText = $"SELECT * FROM series WHERE (`name` = '{titulo}')";
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        //exibir somente se existirem séries já cadastradas
+                        if (reader.Read())
+                        {
+                            Console.WriteLine($"#ID {reader["id"]}: {reader["name"]} - {((int) reader["total_ep"] == (int) reader["current_ep"] ? "Em dia" : $"Atrasada - Episódios faltando: {(int) reader["total_ep"] - (int) reader["current_ep"]}")}");   
+                        }
+
+                        else
+                            Console.WriteLine("Série não cadastrada!");
+                        
+                    }
+                }
+            }
         }
 
         public MySqlConnectionStringBuilder Connection()

@@ -51,73 +51,46 @@ namespace CadastroDeSeries
 
             var dados = InformarDadosSerie();
 
-			Serie novaSerie = new Serie(id: repositorio.ProximoId(),
-										genero: dados.Item1,
+			Serie novaSerie = new Serie(genero: dados.Item1,
 										titulo: dados.Item2,
                                         total_ep: dados.Item3,
                                         atual_ep: dados.Item4,
-										ano: dados.Item5,
-										descricao: dados.Item6);
+										ano: dados.Item5);
 
 			repositorio.Insere(novaSerie);
         }
 
         private static void AtualizarSerie()
         {
-            Console.Write("Digite o id da série: ");
-			int indiceSerie = int.Parse(Console.ReadLine());
-
-            //checar se a série está cadastrada
-            // if (indiceSerie > repositorio.Lista().Count)
-            // {
-            //     Console.WriteLine("Série não cadastrada");
-            //     return ;
-            // }
+            Console.Write("Digite o nome da série: ");
+			string nomeSerie = Console.ReadLine();
 
             var dados = InformarDadosSerie();
 
-            Serie atualizaSerie = new Serie(id: indiceSerie,
-										genero: dados.Item1,
+            Serie atualizaSerie = new Serie(genero: dados.Item1,
 										titulo: dados.Item2,
                                         total_ep: dados.Item3,
                                         atual_ep: dados.Item4,
-										ano: dados.Item5,
-										descricao: dados.Item6);
+										ano: dados.Item5);
 
-			repositorio.Atualiza(indiceSerie, atualizaSerie);
+			repositorio.Atualiza(nomeSerie, atualizaSerie);
         }
 
         private static void ExcluirSerie()
         {
-            Console.Write("Digite o id da série: ");
-			int indiceSerie = int.Parse(Console.ReadLine());
+            Console.Write("Digite o nome da série: ");
+			string nomeSerie = Console.ReadLine();
 
-            //checar se a série está cadastrada
-            // if (indiceSerie > repositorio.Lista().Count)
-            // {
-            //     Console.WriteLine("Série não cadastrada");
-            //     return ;
-            // }
-
-			repositorio.Exclui(indiceSerie);
+			repositorio.Exclui(nomeSerie);
         }
 
         private static void VisualizarSerie()
         {
-            Console.Write("Digite o id da série: ");
-			int indiceSerie = int.Parse(Console.ReadLine());
+            Console.Write("Digite o nome da série: ");
+			string nomeSerie = Console.ReadLine().ToString();
             Console.WriteLine();
 
-            //checar se a série está cadastrada
-            // if (indiceSerie > repositorio.Lista().Count)
-            // {
-            //     Console.WriteLine("Série não cadastrada");
-            //     return ;
-            // }
-
-			var serie = repositorio.RetornaPorId(indiceSerie);
-
-			Console.WriteLine(serie);
+			repositorio.RetornaPorTitulo(nomeSerie);
         }
 
         private static string ObterOpcaoUsuario()
@@ -136,11 +109,10 @@ namespace CadastroDeSeries
         
             string opcaoUsuario = Console.ReadLine().ToUpper();
             Console.WriteLine();
-            //Console.Clear();
             return opcaoUsuario;
         }
 
-        private static (Genero, string, int, int, int, string) InformarDadosSerie()
+        private static (Genero, string, int, int, int) InformarDadosSerie()
         {
             //listar id dos gêneros
 			foreach (int i in Enum.GetValues(typeof(Genero)))
@@ -154,7 +126,7 @@ namespace CadastroDeSeries
 			Console.Write("Digite o Título da Série: ");
 			string entradaTitulo = Console.ReadLine();
 
-            Console.Write("Digite o número toal de episódios: ");
+            Console.Write("Digite o número total de episódios: ");
 			int entradaTotalEp = int.Parse(Console.ReadLine());
 
             Console.Write("Digite quantos episódios foram assistidos: ");
@@ -163,10 +135,7 @@ namespace CadastroDeSeries
 			Console.Write("Digite o Ano de Início da Série: ");
 			int entradaAno = int.Parse(Console.ReadLine());
 
-			Console.Write("Digite a Descrição da Série: ");
-			string entradaDescricao = Console.ReadLine();
-
-            return ((Genero)entradaGenero, entradaTitulo, entradaTotalEp, entradaAtualEp, entradaAno, entradaDescricao);
+            return ((Genero)entradaGenero, entradaTitulo, entradaTotalEp, entradaAtualEp, entradaAno);
         }
     }
 }
