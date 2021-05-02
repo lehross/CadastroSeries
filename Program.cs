@@ -1,4 +1,5 @@
 ﻿using System;
+using MySqlConnector;
 
 namespace CadastroDeSeries
 {
@@ -41,20 +42,7 @@ namespace CadastroDeSeries
         {
             Console.WriteLine("Listar séries");
 
-            var lista = repositorio.Lista();
-
-            if (lista.Count == 0)
-            {
-                Console.WriteLine("Nenhuma série cadastrada.");
-                return;
-            }
-
-            foreach (var serie in lista)
-            {
-                var excluido = serie.RetornaExcluido();
-                    
-                Console.WriteLine($"#ID {serie.RetornaId()}: - {serie.RetornaTitulo()} {(excluido ? "*Excluído*" : "")}");
-            }
+            repositorio.Lista();
         }
 
         private static void InserirSerie()
@@ -66,8 +54,10 @@ namespace CadastroDeSeries
 			Serie novaSerie = new Serie(id: repositorio.ProximoId(),
 										genero: dados.Item1,
 										titulo: dados.Item2,
-										ano: dados.Item3,
-										descricao: dados.Item4);
+                                        total_ep: dados.Item3,
+                                        atual_ep: dados.Item4,
+										ano: dados.Item5,
+										descricao: dados.Item6);
 
 			repositorio.Insere(novaSerie);
         }
@@ -78,19 +68,21 @@ namespace CadastroDeSeries
 			int indiceSerie = int.Parse(Console.ReadLine());
 
             //checar se a série está cadastrada
-            if (indiceSerie > repositorio.Lista().Count)
-            {
-                Console.WriteLine("Série não cadastrada");
-                return ;
-            }
+            // if (indiceSerie > repositorio.Lista().Count)
+            // {
+            //     Console.WriteLine("Série não cadastrada");
+            //     return ;
+            // }
 
             var dados = InformarDadosSerie();
 
             Serie atualizaSerie = new Serie(id: indiceSerie,
 										genero: dados.Item1,
 										titulo: dados.Item2,
-										ano: dados.Item3,
-										descricao: dados.Item4);
+                                        total_ep: dados.Item3,
+                                        atual_ep: dados.Item4,
+										ano: dados.Item5,
+										descricao: dados.Item6);
 
 			repositorio.Atualiza(indiceSerie, atualizaSerie);
         }
@@ -101,11 +93,11 @@ namespace CadastroDeSeries
 			int indiceSerie = int.Parse(Console.ReadLine());
 
             //checar se a série está cadastrada
-            if (indiceSerie > repositorio.Lista().Count)
-            {
-                Console.WriteLine("Série não cadastrada");
-                return ;
-            }
+            // if (indiceSerie > repositorio.Lista().Count)
+            // {
+            //     Console.WriteLine("Série não cadastrada");
+            //     return ;
+            // }
 
 			repositorio.Exclui(indiceSerie);
         }
@@ -117,11 +109,11 @@ namespace CadastroDeSeries
             Console.WriteLine();
 
             //checar se a série está cadastrada
-            if (indiceSerie > repositorio.Lista().Count)
-            {
-                Console.WriteLine("Série não cadastrada");
-                return ;
-            }
+            // if (indiceSerie > repositorio.Lista().Count)
+            // {
+            //     Console.WriteLine("Série não cadastrada");
+            //     return ;
+            // }
 
 			var serie = repositorio.RetornaPorId(indiceSerie);
 
@@ -148,7 +140,7 @@ namespace CadastroDeSeries
             return opcaoUsuario;
         }
 
-        private static (Genero, string, int, string) InformarDadosSerie()
+        private static (Genero, string, int, int, int, string) InformarDadosSerie()
         {
             //listar id dos gêneros
 			foreach (int i in Enum.GetValues(typeof(Genero)))
@@ -162,13 +154,19 @@ namespace CadastroDeSeries
 			Console.Write("Digite o Título da Série: ");
 			string entradaTitulo = Console.ReadLine();
 
+            Console.Write("Digite o número toal de episódios: ");
+			int entradaTotalEp = int.Parse(Console.ReadLine());
+
+            Console.Write("Digite quantos episódios foram assistidos: ");
+			int entradaAtualEp = int.Parse(Console.ReadLine());
+
 			Console.Write("Digite o Ano de Início da Série: ");
 			int entradaAno = int.Parse(Console.ReadLine());
 
 			Console.Write("Digite a Descrição da Série: ");
 			string entradaDescricao = Console.ReadLine();
 
-            return ((Genero)entradaGenero, entradaTitulo, entradaAno, entradaDescricao);
+            return ((Genero)entradaGenero, entradaTitulo, entradaTotalEp, entradaAtualEp, entradaAno, entradaDescricao);
         }
     }
 }

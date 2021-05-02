@@ -4,7 +4,7 @@ namespace CadastroDeSeries.Interfaces
 {
     public interface IRepositorio<T>
     {
-        List<T> Lista();
+        void Lista();
         T RetornaPorId(int id);
         void Insere(T entidade);
         void Exclui(int id);

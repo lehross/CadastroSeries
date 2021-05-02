@@ -4,18 +4,22 @@ namespace CadastroDeSeries
 {
     public class Serie : EntidadeBase
     {
-        private Genero Genero { get; set; }
-        private string Titulo { get; set; }
-        private string Descricao { get; set; }
-        private int Ano { get; set; }
+        public Genero Genero { get; set; }
+        public string Titulo { get; set; }
+        public int Total_Ep { get; set; }
+        public int Atual_Ep { get; set; }
+        public string Descricao { get; set; }
+        public int Ano { get; set; }
 
         private bool Excluido { get; set; }
 
-        public Serie(int id, Genero genero, string titulo, string descricao, int ano)
+        public Serie(int id, Genero genero, string titulo, int total_ep, int atual_ep, string descricao, int ano)
         {
             this.Id = id;
             this.Genero = genero;
             this.Titulo = titulo;
+            this.Total_Ep = total_ep;
+            this.Atual_Ep = atual_ep;
             this.Descricao = descricao;
             this.Ano = ano;
             this.Excluido = false;
@@ -26,6 +30,8 @@ namespace CadastroDeSeries
             string retorno = "";
             retorno += "Gênero: " + this.Genero + Environment.NewLine;
             retorno += "Titulo: " + this.Titulo + Environment.NewLine;
+            retorno += "Total de Episódios: " + this.Total_Ep + Environment.NewLine;
+            retorno += "Episódios Assistidos: " + this.Atual_Ep + Environment.NewLine;
             retorno += "Descrição: " + this.Descricao + Environment.NewLine;
             retorno += "Ano de Início: " + this.Ano + Environment.NewLine;
 
